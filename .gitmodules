@@ -1,0 +1,3 @@
+[submodule "power_52/lib/Config"]
+	path = power_52/lib/Config
+	url = git@github.com:teejstroyer/Power52Config.git
