@@ -46,5 +46,5 @@ app.*.map.json
 /android/app/release
 
 # Config Files Contained in another repo
-ConfigFiles/config.dart
+lib/Power52Config/config.dart
 
