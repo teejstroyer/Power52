@@ -1,0 +1,3 @@
+[submodule "power_52/ConfigFiles"]
+	path = power_52/ConfigFiles
+	url = git@gist.github.com:a2526fa7fb864c42ed9dde8fb7931fcb.git
