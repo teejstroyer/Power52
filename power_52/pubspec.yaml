@@ -9,12 +9,10 @@ environment:
   sdk: ">=2.15.0-116.0.dev <3.0.0"
 
 dependencies:
-  firebase_core: "^1.7.0"
+  mongo_dart:
   flutter_webrtc:
   flutter:
     sdk: flutter
-
-  cupertino_icons: ^1.0.2
 
 dev_dependencies:
   flutter_test:

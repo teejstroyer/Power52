@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:power_52/dbservice.dart';
 
 void main() {
   runApp(const MyApp());
@@ -18,7 +19,11 @@ class MyApp extends StatelessWidget {
         children: [
           Container(
             color: Colors.red,
-          )
+            child: TextButton(
+              onPressed: () => {DBService.addUser("Bill")},
+              child: const Text('Add User'),
+            ),
+          ),
         ],
       )),
     );
