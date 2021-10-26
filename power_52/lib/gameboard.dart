@@ -15,6 +15,7 @@ class GameBoard extends StatefulWidget {
 
 class _GameBoardState extends State<GameBoard> {
   final List<List<PlayingCard?>> grid = [];
+  final List<PlayingCard> hand = [PlayingCard(Suit.DIAMOND, 12)];
   @override
   Widget build(BuildContext context) {
     //Array Length-1 minus index will give you inversed index.
@@ -26,14 +27,38 @@ class _GameBoardState extends State<GameBoard> {
         Expanded(child: Container(color: Colors.green)),
         getGrid(gridSize, size),
         Expanded(
-          child: Row(
-            children: [
-              HeroCard(size: size * .9, playingCard: PlayingCard(Suit.DIAMOND, 12)),
-            ],
+          child: Center(
+            child: SizedBox(
+              height: size * .9,
+              child: Row(
+                children: hand
+                    .map((card) => HeroCard(
+                          playingCard: card,
+                          size: size * .9,
+                          cardMoved: () {
+                            setState(() {
+                              hand.remove(card);
+                            });
+                          },
+                        ))
+                    .toList(),
+              ),
+            ),
           ),
         ),
       ],
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    for (int i = 0; i < 4; i++) {
+      grid.add([]);
+      for (int j = 0; j < 4; j++) {
+        grid[i].add(null);
+      }
+    }
   }
 
   Widget getGrid(int gridSize, double size) {
@@ -43,16 +68,38 @@ class _GameBoardState extends State<GameBoard> {
       List<Widget> row = [];
       for (int x = 0; x < gridSize; x++) {
         row.add(DragTarget(
-          builder: (BuildContext context, List<Object?> candidateData, List<dynamic> rejectedData) {
+          builder: (BuildContext context, List<PlayingCard?> candidateData, List<dynamic> rejectedData) {
             return Container(
+              height: size,
+              width: size,
               decoration: boxDecoration,
               child: grid[x][y] == null
                   ? const SizedBox.shrink()
-                  : HeroCard(
-                      size: size,
-                      playingCard: grid[x][y] as PlayingCard,
+                  : Center(
+                      child: SizedBox(
+                        height: size * .9,
+                        width: size * .9 / 2,
+                        child: HeroCard(
+                            size: size * .9,
+                            playingCard: grid[x][y] as PlayingCard,
+                            cardMoved: () {
+                              setState(() {
+                                grid[x][y] = null;
+                              });
+                            }),
+                      ),
                     ),
             );
+          },
+          onWillAccept: (data) {
+            return grid[x][y] == null;
+          },
+          onAccept: (data) {
+            if (data != null) {
+              setState(() {
+                grid[x][y] = data as PlayingCard;
+              });
+            }
           },
         ));
       }
@@ -65,24 +112,32 @@ class _GameBoardState extends State<GameBoard> {
 class HeroCard extends StatelessWidget {
   final double size;
   final PlayingCard playingCard;
-  const HeroCard({Key? key, required this.size, required this.playingCard}) : super(key: key);
+  final Function cardMoved;
+  const HeroCard({Key? key, required this.size, required this.playingCard, required this.cardMoved}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Draggable(
+      data: playingCard,
       child: getCard(size),
       feedback: getCard(size),
       childWhenDragging: const SizedBox.shrink(),
+      onDragCompleted: () {
+        cardMoved();
+      },
     );
   }
 
-  Material getCard(double size) => Material(
+  Widget getCard(double size) => Center(
         child: Container(
-          color: Colors.pink,
+          color: Colors.red,
           width: size / 2,
           height: size,
           child: Center(
-            child: Text(playingCard.toString()),
+            child: Material(
+              color: Colors.transparent,
+              child: Text(playingCard.toString()),
+            ),
           ),
         ),
       );
