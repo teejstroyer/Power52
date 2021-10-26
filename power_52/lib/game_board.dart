@@ -5,7 +5,8 @@ import 'package:power_52/playing_card.dart';
 
 const List<Suit> suits = [Suit.club, Suit.diamond, Suit.heart, Suit.spade];
 const List<int> powerCardValues = [2, 3, 4, 5, 6, 7, 8, 9];
-const List<int> heroCardValues = [1, 10, 11, 12, 13];
+const List<int> heroCardValues = [1, 10, 11, 12];
+const int kingCardValue = 13;
 
 class GameBoard extends StatefulWidget {
   // ignore: prefer_const_constructors_in_immutables
@@ -16,46 +17,32 @@ class GameBoard extends StatefulWidget {
 }
 
 class _GameBoardState extends State<GameBoard> {
-  final List<List<PlayingCard?>> grid = [];
-  final List<PlayingCard> hand = [
-    PlayingCard(Suit.diamond, 12),
-    PlayingCard(Suit.club, 12),
-    PlayingCard(Suit.heart, 12),
-    PlayingCard(Suit.spade, 12),
-  ];
+  late int gridSize;
+  // Cards
+  List<List<PlayingCard?>> grid = [];
+  List<PlayingCard> oponentHand = [];
+  List<PlayingCard> hand = [];
+  // Kings
+  List<PlayingCard> kingCardPile = [];
+  // Power Cards
+  List<PlayingCard> powerCardPile = [];
+  List<PlayingCard> discardPowerCardPile = [];
+  // Hero Cards
+  List<PlayingCard> heroCardPile = [];
+  List<PlayingCard> discardHeroCardPile = [];
+
   @override
   Widget build(BuildContext context) {
     //Array Length-1 minus index will give you inversed index.
     var screenSize = MediaQuery.of(context).size;
-    int gridSize = 4;
     var size = ([screenSize.height, screenSize.width].reduce(min) / gridSize);
     var cardSize = size * .9;
 
     return Column(
       children: [
         Expanded(child: Container(color: Colors.green)),
-        getGrid(gridSize, size, cardSize),
-        Expanded(
-          child: Center(
-            child: SizedBox(
-              height: cardSize,
-              child: Row(
-                children: hand
-                    .map((card) => HeroCard(
-                        playingCard: card,
-                        size: cardSize,
-                        cardMoved: () {
-                          setState(
-                            () {
-                              hand.remove(card);
-                            },
-                          );
-                        }))
-                    .toList(),
-              ),
-            ),
-          ),
-        ),
+        getGrid(size, cardSize),
+        getHand(cardSize),
       ],
     );
   }
@@ -63,15 +50,60 @@ class _GameBoardState extends State<GameBoard> {
   @override
   void initState() {
     super.initState();
-    for (int i = 0; i < 4; i++) {
+    gridSize = 4;
+    for (int i = 0; i < gridSize; i++) {
       grid.add([]);
-      for (int j = 0; j < 4; j++) {
+      for (int j = 0; j < gridSize; j++) {
         grid[i].add(null);
       }
     }
+
+    for (var suit in suits) {
+      for (var value in powerCardValues) {
+        powerCardPile.add(PlayingCard(suit, value));
+      }
+      for (var value in heroCardValues) {
+        heroCardPile.add(PlayingCard(suit, value));
+      }
+      kingCardPile.add(PlayingCard(suit, kingCardValue));
+    }
+
+    powerCardPile.shuffle();
+    heroCardPile.shuffle();
+    kingCardPile.shuffle();
+
+    oponentHand.add(kingCardPile.removeLast());
+    oponentHand.add(heroCardPile.removeLast());
+    oponentHand.add(heroCardPile.removeLast());
+
+    hand.add(kingCardPile.removeLast());
+    hand.add(heroCardPile.removeLast());
+    hand.add(heroCardPile.removeLast());
   }
 
-  Widget getGrid(int gridSize, double size, double cardSize) {
+  Widget getHand(double cardSize) {
+    return Expanded(
+      child: Center(
+        child: SizedBox(
+          height: cardSize,
+          child: Row(
+            children: hand
+                .map((card) => HeroCard(
+                    playingCard: card,
+                    size: cardSize,
+                    cardMoved: () {
+                      setState(() {
+                        hand.remove(card);
+                      });
+                    }))
+                .toList(),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget getGrid(double size, double cardSize) {
     var boxDecoration = BoxDecoration(color: Colors.yellow, border: Border.all(color: Colors.black, width: 3));
     List<Row> rows = [];
     for (int y = 0; y < gridSize; y++) {
