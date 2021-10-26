@@ -10,7 +10,6 @@ environment:
 
 dependencies:
   mongo_dart:
-  flutter_webrtc:
   flutter:
     sdk: flutter
 
