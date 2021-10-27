@@ -32,22 +32,6 @@ class _GameBoardState extends State<GameBoard> {
   List<PlayingCard> discardHeroCardPile = [];
 
   @override
-  Widget build(BuildContext context) {
-    //Array Length-1 minus index will give you inversed index.
-    var screenSize = MediaQuery.of(context).size;
-    var size = ([screenSize.height, screenSize.width].reduce(min) / gridSize);
-    var cardSize = size * .9;
-
-    return Column(
-      children: [
-        Expanded(child: Container(color: Colors.green)),
-        getGrid(size, cardSize),
-        getHand(cardSize),
-      ],
-    );
-  }
-
-  @override
   void initState() {
     super.initState();
     gridSize = 4;
@@ -79,6 +63,22 @@ class _GameBoardState extends State<GameBoard> {
     hand.add(kingCardPile.removeLast());
     hand.add(heroCardPile.removeLast());
     hand.add(heroCardPile.removeLast());
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    //Array Length-1 minus index will give you inversed index.
+    var screenSize = MediaQuery.of(context).size;
+    var size = ([screenSize.height, screenSize.width].reduce(min) / gridSize);
+    var cardSize = size * .9;
+
+    return Column(
+      children: [
+        Expanded(child: Container(color: Colors.green)),
+        getGrid(size, cardSize),
+        getHand(cardSize),
+      ],
+    );
   }
 
   Widget getHand(double cardSize) {
@@ -118,9 +118,10 @@ class _GameBoardState extends State<GameBoard> {
               child: grid[x][y] == null
                   ? const SizedBox.shrink()
                   : Center(
-                      child: SizedBox(
-                        height: cardSize,
+                      child: Container(
+                        color: Colors.red,
                         width: cardSize / 2,
+                        clipBehavior: Clip.none,
                         child: HeroCard(
                             size: cardSize,
                             playingCard: grid[x][y] as PlayingCard,
