@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:power_52/widgets/playing_card_widget.dart';
+import 'package:power_52/widgets/hero_card_widget.dart';
 
 class PlayingCard {
   Suit suit;
   int value;
-  PlayingCard(this.suit, this.value);
+  bool faceUp;
+  bool isEnemy;
+  List<PlayingCard> powerCards = [];
+  PlayingCard({required this.suit, required this.value, this.isEnemy = false, this.faceUp = false});
 
   String valueToString() {
     switch (value) {
@@ -48,6 +53,11 @@ class PlayingCard {
 
   @override
   String toString() => "${valueToString()}${suitToString()}";
+
+  // Generates A Game Card Size tall by 1/2 Size Wide
+  PlayingCardWidget toPlayingCardWidget(double size) => PlayingCardWidget(playingCard: this, size: size);
+  // Generates A Hero Card Size tall by 1/2 Size Wide
+  HeroCardWidget toHeroCardWidget(double size, Function cardMoved) => HeroCardWidget(playingCard: this, size: size, cardMoved: cardMoved);
 }
 
 enum Suit {

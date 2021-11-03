@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:power_52/game_board.dart';
+import 'package:power_52/screens/game_board.dart';
 
 void main() => runApp(const MyApp());
 

@@ -1,7 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:power_52/hero_card.dart';
-import 'package:power_52/playing_card.dart';
+import 'package:power_52/widgets/hero_card_widget.dart';
+import 'package:power_52/models/playing_card.dart';
 
 const List<Suit> suits = [Suit.club, Suit.diamond, Suit.heart, Suit.spade];
 const List<int> powerCardValues = [2, 3, 4, 5, 6, 7, 8, 9];
@@ -29,7 +29,7 @@ class _GameBoardState extends State<GameBoard> {
   List<PlayingCard> discardPowerCardPile = [];
   // Hero Cards
   List<PlayingCard> heroCardPile = [];
-  List<PlayingCard> discardHeroCardPile = [];
+  List<PlayingCard> discardHeroCardWidgetPile = [];
 
   @override
   void initState() {
@@ -44,12 +44,12 @@ class _GameBoardState extends State<GameBoard> {
 
     for (var suit in suits) {
       for (var value in powerCardValues) {
-        powerCardPile.add(PlayingCard(suit, value));
+        powerCardPile.add(PlayingCard(suit: suit, value: value));
       }
       for (var value in heroCardValues) {
-        heroCardPile.add(PlayingCard(suit, value));
+        heroCardPile.add(PlayingCard(suit: suit, value: value));
       }
-      kingCardPile.add(PlayingCard(suit, kingCardValue));
+      kingCardPile.add(PlayingCard(suit: suit, value: kingCardValue));
     }
 
     powerCardPile.shuffle();
@@ -87,16 +87,7 @@ class _GameBoardState extends State<GameBoard> {
         child: SizedBox(
           height: cardSize,
           child: Row(
-            children: hand
-                .map((card) => HeroCard(
-                    playingCard: card,
-                    size: cardSize,
-                    cardMoved: () {
-                      setState(() {
-                        hand.remove(card);
-                      });
-                    }))
-                .toList(),
+            children: hand.map((card) => card.toHeroCardWidget(cardSize, () => setState(() => hand.remove(card)))).toList(),
           ),
         ),
       ),
@@ -120,9 +111,8 @@ class _GameBoardState extends State<GameBoard> {
                   : Center(
                       child: Container(
                         color: Colors.red,
-                        width: cardSize / 2,
                         clipBehavior: Clip.none,
-                        child: HeroCard(
+                        child: HeroCardWidget(
                             size: cardSize,
                             playingCard: grid[x][y] as PlayingCard,
                             cardMoved: () {
