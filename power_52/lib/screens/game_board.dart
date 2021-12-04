@@ -4,9 +4,8 @@ import 'package:power_52/widgets/hero_card_widget.dart';
 import 'package:power_52/models/playing_card.dart';
 
 const List<Suit> suits = [Suit.club, Suit.diamond, Suit.heart, Suit.spade];
-const List<int> powerCardValues = [2, 3, 4, 5, 6, 7, 8, 9];
-const List<int> heroCardValues = [1, 10, 11, 12];
-const int kingCardValue = 13;
+const List<Rank> powerCardValues = [Rank.two, Rank.three, Rank.four, Rank.five, Rank.six, Rank.seven, Rank.eight, Rank.nine];
+const List<Rank> heroCardValues = [Rank.ten, Rank.jack, Rank.queen, Rank.king, Rank.ace];
 
 class GameBoard extends StatefulWidget {
   // ignore: prefer_const_constructors_in_immutables
@@ -43,13 +42,13 @@ class _GameBoardState extends State<GameBoard> {
     }
 
     for (var suit in suits) {
-      for (var value in powerCardValues) {
-        powerCardPile.add(PlayingCard(suit: suit, value: value));
+      for (var rank in powerCardValues) {
+        powerCardPile.add(PlayingCard(suit: suit, rank: rank));
       }
-      for (var value in heroCardValues) {
-        heroCardPile.add(PlayingCard(suit: suit, value: value));
+      for (var rank in heroCardValues) {
+        heroCardPile.add(PlayingCard(suit: suit, rank: rank));
       }
-      kingCardPile.add(PlayingCard(suit: suit, value: kingCardValue));
+      kingCardPile.add(PlayingCard(suit: suit, rank: Rank.king));
     }
 
     powerCardPile.shuffle();

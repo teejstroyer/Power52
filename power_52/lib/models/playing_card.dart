@@ -4,26 +4,57 @@ import 'package:power_52/widgets/hero_card_widget.dart';
 
 class PlayingCard {
   Suit suit;
-  int value;
+  Rank rank;
   bool faceUp;
   bool isEnemy;
   List<PlayingCard> powerCards = [];
-  PlayingCard({required this.suit, required this.value, this.isEnemy = false, this.faceUp = false});
+  PlayingCard({required this.suit, required this.rank, this.isEnemy = false, this.faceUp = false});
 
-  String valueToString() {
-    switch (value) {
-      case 1:
+  String rankToString() {
+    switch (rank) {
+      case Rank.ace:
         return "A";
-      case 10:
+      case Rank.ten:
         return "X";
-      case 11:
+      case Rank.jack:
         return "J";
-      case 12:
+      case Rank.queen:
         return "Q";
-      case 13:
+      case Rank.king:
         return "K";
       default:
-        return value.toString();
+        return rankToInt().toString();
+    }
+  }
+
+  int rankToInt() {
+    switch (rank) {
+      case Rank.two:
+        return 2;
+      case Rank.three:
+        return 3;
+      case Rank.four:
+        return 4;
+      case Rank.five:
+        return 5;
+      case Rank.six:
+        return 6;
+      case Rank.seven:
+        return 7;
+      case Rank.eight:
+        return 8;
+      case Rank.nine:
+        return 9;
+      case Rank.ten:
+        return 10;
+      case Rank.jack:
+        return 11;
+      case Rank.queen:
+        return 12;
+      case Rank.king:
+        return 13;
+      case Rank.ace:
+        return 1;
     }
   }
 
@@ -52,7 +83,7 @@ class PlayingCard {
   }
 
   @override
-  String toString() => "${valueToString()}${suitToString()}";
+  String toString() => "${rankToString()}${suitToString()}";
 
   // Generates A Game Card Size tall by 1/2 Size Wide
   PlayingCardWidget toPlayingCardWidget(double size) => PlayingCardWidget(playingCard: this, size: size);
@@ -65,4 +96,20 @@ enum Suit {
   spade,
   club,
   diamond,
+}
+
+enum Rank {
+  two,
+  three,
+  four,
+  five,
+  six,
+  seven,
+  eight,
+  nine,
+  ten,
+  jack,
+  queen,
+  king,
+  ace,
 }

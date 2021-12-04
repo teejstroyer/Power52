@@ -18,24 +18,18 @@ class HeroCardWidget extends StatelessWidget {
       data: playingCard,
       child: getHeroCardWidget(),
       feedback: getHeroCardWidget(),
-      childWhenDragging: const SizedBox.shrink(),
+      childWhenDragging: Container(), //const SizedBox.shrink(),
       onDragCompleted: () => cardMoved(),
     );
   }
 
   Widget getHeroCardWidget() {
-    return RotatedBox(
-      quarterTurns: playingCard.isEnemy ? 2 : 0,
-      child: Container(
-        color: Colors.green,
-        child: Stack(
-          clipBehavior: Clip.none,
-          alignment: Alignment.center,
-          children: [
-            playingCardWidget,
-            Positioned(bottom: 0, child: RotatedBox(quarterTurns: 1, child: playingCardWidget)),
-          ],
-        ),
+    return SizedBox(
+      width: size,
+      height: size,
+      child: RotatedBox(
+        quarterTurns: playingCard.isEnemy ? 2 : 0,
+        child: playingCardWidget,
       ),
     );
   }
